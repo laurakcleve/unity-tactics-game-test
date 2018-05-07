@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInactive : State {
 
 	public override void Enter(PlayerUnit unit) {
-		unit.LogState("PlayerInactive", "ENTER");
+		// unit.LogState("PlayerInactive", "ENTER");
 
         GameManager.instance.moveButton.onClick.RemoveAllListeners();
 		GameManager.instance.actButton.onClick.RemoveAllListeners();
@@ -19,7 +19,7 @@ public class PlayerInactive : State {
 	}
 
 	public override void Exit(PlayerUnit unit) {
-        unit.LogState("PlayerInactive", "EXIT");
+        // unit.LogState("PlayerInactive", "EXIT");
 
 		GameManager.instance.moveButton.onClick.AddListener(unit.ClickMove);
 		GameManager.instance.actButton.onClick.AddListener(unit.ClickAct);
@@ -32,6 +32,7 @@ public class PlayerInactive : State {
 		unit.gameObject.transform.Find("Spotlight").gameObject.SetActive(true);
 
 		GameManager.instance.moveButton.interactable = true;
+        GameManager.instance.actButton.interactable = true;
 	}
 	
 }

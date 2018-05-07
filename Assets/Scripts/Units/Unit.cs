@@ -13,10 +13,21 @@ public abstract class Unit : MonoBehaviour {
     public List<GameObject> validAbilityTargets;
     public Ability activeAbility;
     public State currentState;
-    public Material originalMat;
+    public Material defaultMat;
     public Material highlightMat;
+    public Material deadMat;
+    public int maxHealth;
+    public int currentHealth;
+    public int turnPosition;
+    public bool isDead = false;
+
+    protected Material currentMat;
 
 
+    protected virtual void Awake() {
+        currentHealth = maxHealth;
+        currentMat = defaultMat;
+    }
 
     public abstract void TakeTurn();
 	
@@ -27,7 +38,12 @@ public abstract class Unit : MonoBehaviour {
     public List<GameObject> GetValidMoveTiles(GameObject startTile, int range) {
         List<GameObject> validTiles = new List<GameObject>();
         CheckNextTile(validTiles, startTile, range);
-        validTiles.Remove(startTile);
+        foreach (GameObject unit in GameManager.instance.units) {
+            GameObject tile = unit.GetComponent<Unit>().currentTile;
+            if (validTiles.Contains(tile)) {
+                validTiles.Remove(tile);
+            }
+        }
         return validTiles;
     }
 
@@ -40,17 +56,6 @@ public abstract class Unit : MonoBehaviour {
         }
 
         CheckNextTile(validTiles, startTile, ability.range);
-
-        switch(ability.targetType) {
-            case TargetType.Ally:
-                break;
-            case TargetType.Enemy:
-                break;
-            case TargetType.Any:
-                break;
-            default:
-                break;
-        }
 
         return validTiles;
     }
@@ -78,6 +83,23 @@ public abstract class Unit : MonoBehaviour {
     }
 
     public void DisableHighlight() {
-        GetComponent<Renderer>().material = originalMat;
+        GetComponent<Renderer>().material = currentMat;
+    }
+
+    public void TakeDamage(int damage) {
+        currentHealth -= damage;
+        Debug.Log(gameObject.name + " takes " + damage + " points of damage");
+        Debug.Log(gameObject.name + " current health: " + currentHealth);
+        if (currentHealth <= 0) {
+            currentHealth = 0;
+            Die();
+        }
+    }
+
+    private void Die() {
+        Debug.Log(gameObject.name + " is dead");
+        isDead = true;
+        currentMat = deadMat;
+        GameManager.instance.RemoveUnit(turnPosition);
     }
 }

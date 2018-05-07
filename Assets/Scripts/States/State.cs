@@ -9,6 +9,7 @@ public class State {
     public static PlayerSelectDestination playerSelectDestination = new PlayerSelectDestination();
     public static PlayerConfirmDestination playerConfirmDestination = new PlayerConfirmDestination();
     public static PlayerSelectTarget playerSelectTarget = new PlayerSelectTarget();
+    public static PlayerConfirmTarget playerConfirmTarget = new PlayerConfirmTarget();
     public static PlayerMenus playerMenus = new PlayerMenus();
 
     public virtual void Enter(AIUnit unit) { }

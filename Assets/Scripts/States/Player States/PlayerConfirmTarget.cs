@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSelectDestination : State {
+public class PlayerConfirmTarget : State {
 
     public override void Enter(PlayerUnit unit) {
-        // unit.LogState("PlayerSelectDestination", "ENTER");
+        // unit.LogState("PlayerConfirmTarget", "ENTER");
 
         GameManager.instance.cancelButton.gameObject.SetActive(true);
+        GameManager.instance.confirmButton.gameObject.SetActive(true);
 
-		unit.validMoves = unit.GetValidMoveTiles(unit.currentTile, unit.moveRange);
-		unit.ShowTiles(unit.validMoves);
+        unit.HighlightEffectTiles();
     }
 
     public override void Exit(PlayerUnit unit) {
-        // unit.LogState("PlayerSelectDestination", "EXIT");
+        // unit.LogState("PlayerConfirmTarget", "EXIT");
 
         GameManager.instance.cancelButton.gameObject.SetActive(false);
-
-        unit.HideTiles(unit.validMoves);
+        GameManager.instance.confirmButton.gameObject.SetActive(false);
     }
 
 }

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add33833ffcebbb42907dd351c8a769d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingX: 8
+  startingX: 6
   startingZ: 9
   moveRange: 4
   currentTile: {fileID: 0}
@@ -184,8 +184,13 @@ MonoBehaviour:
   validMoves: []
   validAbilityTargets: []
   activeAbility: {fileID: 0}
-  originalMat: {fileID: 2100000, guid: 40717109510768f4ba7b750642651c62, type: 2}
+  defaultMat: {fileID: 2100000, guid: 40717109510768f4ba7b750642651c62, type: 2}
   highlightMat: {fileID: 2100000, guid: 8db7460da7256614cbcb5ca1a04035fe, type: 2}
+  deadMat: {fileID: 2100000, guid: 2d675203290bfd548b255a33dd6faca6, type: 2}
+  maxHealth: 3
+  currentHealth: 0
+  turnPosition: 0
+  isDead: 0
 --- !u!135 &135771479777737212
 SphereCollider:
   m_ObjectHideFlags: 1

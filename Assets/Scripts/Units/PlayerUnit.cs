@@ -10,19 +10,19 @@ public class PlayerUnit : Unit {
 
     Ray ray;
     RaycastHit hit;
-    List<Tile> currentHoveredEffectTiles;
-    GameObject previousHoveredTile;
-    List<Tile> previousHoveredEffectTiles;
-    GameObject currentHoveredUnit;
-    GameObject previousHoveredUnit;
+    GameObject lastHoveredTile;
+    List<Tile> lastHoveredEffectTiles;
+    GameObject lastHoveredUnit;
+    bool validDestinationHovered = false;
+    bool validTargetHovered = false;
+    bool validAreaHovered = false;
 
 
 
-    void Awake() {
+
+    protected override void Awake() {
+        base.Awake();
         currentState = State.playerInactive;
-        Debug.Log(currentState);
-
-        
     }
 
     void Update() {
@@ -32,61 +32,104 @@ public class PlayerUnit : Unit {
     }
 
     void Mouseover() {
+        validAreaHovered = false;
+        validTargetHovered = false;
+        validDestinationHovered = false;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit)) {
             GameObject obj = hit.collider.gameObject;
             if (currentState == State.playerSelectDestination) {
-                if (previousHoveredTile != obj && previousHoveredTile != null) {
-                    previousHoveredTile.GetComponent<Tile>().DisableHighlight();
+                if (lastHoveredTile != obj && lastHoveredTile != null) {
+                    lastHoveredTile.GetComponent<Tile>().DisableHighlight();
                 }
                 if (obj.CompareTag("Tile") && validMoves.Contains(obj)) {
                     obj.GetComponent<Tile>().Highlight();
-                    previousHoveredTile = obj;
+                    lastHoveredTile = obj;
+                    validDestinationHovered = true;
                 }
 
             }
             else if (currentState == State.playerSelectTarget) {
-                switch(activeAbility.targetType) {
-                    
+                switch (activeAbility.targetType) {
                     case TargetType.Enemy:
-                        if (previousHoveredUnit != obj && previousHoveredUnit != null) {
-                            previousHoveredUnit.GetComponent<Unit>().DisableHighlight();
+                        if (lastHoveredUnit != obj && lastHoveredUnit != null) {
+                            lastHoveredUnit.GetComponent<Unit>().DisableHighlight();
                         }
-                        if (obj.CompareTag("AIUnit") && validAbilityTargets.Contains(obj.GetComponent<Unit>().currentTile)) {
+                        if (obj.CompareTag("AIUnit") && !obj.GetComponent<Unit>().isDead && validAbilityTargets.Contains(obj.GetComponent<Unit>().currentTile)) {
                             obj.GetComponent<Unit>().EnableHighlight();
-                            previousHoveredUnit = obj;
+                            lastHoveredUnit = obj;
+                            validTargetHovered = true;
                         }
                         break;
-                    
+
                     case TargetType.Any:
-                        if (previousHoveredTile != obj && previousHoveredEffectTiles != null) {
-                            foreach (Tile tile in previousHoveredEffectTiles) {
+                        if (lastHoveredTile != obj && lastHoveredEffectTiles != null) {
+                            foreach (Tile tile in lastHoveredEffectTiles) {
                                 tile.DisableHighlight();
+                                if (tile.currentUnit != null) {
+                                    tile.currentUnit.GetComponent<Unit>().DisableHighlight();
+                                }
                             }
                         }
                         if (obj.CompareTag("Tile") && validAbilityTargets.Contains(obj)) {
-                            currentHoveredEffectTiles = GetEffectTiles(obj.GetComponent<Tile>(), activeAbility.effectTiles);
-                            foreach (Tile tile in currentHoveredEffectTiles) {
-                                tile.Highlight();
-                            }
-                            previousHoveredTile = obj;
-                            previousHoveredEffectTiles = currentHoveredEffectTiles;
+                            lastHoveredEffectTiles = GetEffectTiles(obj.GetComponent<Tile>(), activeAbility.effectTiles);
+                            HighlightEffectTiles();
+                            lastHoveredTile = obj;
+                            validAreaHovered = true;
                         }
                         break;
-                    
+
                     case TargetType.Ally:
                         break;
-                    
+
                     case TargetType.Self:
                         break;
-                    
+
                     default:
                         break;
                 }
             }
 
-            if (Input.GetMouseButtonDown(0) && currentState == State.playerSelectDestination && validMoves.Contains(hit.collider.gameObject)) {
-                MoveToTile(hit.collider.gameObject);
+            if (Input.GetMouseButtonDown(0)) {
+                if (validDestinationHovered) {
+                    MoveToTile(hit.collider.gameObject);
+                }
+                else if (validTargetHovered) {
+                    lastHoveredEffectTiles = null;
+                    ChangeState(State.playerConfirmTarget);
+                }
+                else if (validAreaHovered) {
+                    ChangeState(State.playerConfirmTarget);
+                }
+            }
+        }
+    }
+
+    public void ResetHighlights() {
+        Debug.Log("resetting highlights");
+        if (lastHoveredUnit != null)
+            lastHoveredUnit.GetComponent<Unit>().DisableHighlight();
+        if (lastHoveredTile != null)
+            lastHoveredTile.GetComponent<Tile>().DisableHighlight();
+        if (lastHoveredEffectTiles != null) {
+            foreach (Tile tile in lastHoveredEffectTiles) {
+                if (tile != null){
+                    tile.DisableHighlight();
+                }
+                if (tile.currentUnit != null) {
+                    tile.currentUnit.GetComponent<Unit>().DisableHighlight();
+                }
+            }
+        }
+    }
+
+    public void HighlightEffectTiles() {
+        if (lastHoveredEffectTiles != null) {
+            foreach (Tile tile in lastHoveredEffectTiles) {
+                tile.Highlight();
+                if (tile.currentUnit != null && !tile.currentUnit.GetComponent<Unit>().isDead) {
+                    tile.currentUnit.GetComponent<Unit>().EnableHighlight();
+                }
             }
         }
     }
@@ -155,7 +198,7 @@ public class PlayerUnit : Unit {
     public void ClickAct() {
         ChangeState(State.playerMenus);
         GameManager.instance.abilitiesCanvas.SetActive(true);
-        
+
     }
 
     public void ClickAbility(Ability ability) {
@@ -167,7 +210,6 @@ public class PlayerUnit : Unit {
 
     public void PopulateAbilities() {
         foreach (Ability ability in GetComponent<UnitClass>().abilities) {
-            Debug.Log("Ability: " + ability.name);
             GameObject abilityButton = Instantiate(abilityButtonPrefab, Vector3.zero, Quaternion.identity);
             abilityButton.transform.SetParent(GameManager.instance.abilitiesCanvas.transform, false);
             abilityButton.transform.Find("Text").GetComponent<Text>().text = ability.name;
@@ -199,6 +241,7 @@ public class PlayerUnit : Unit {
         if (currentState == State.playerConfirmDestination) {
             transform.position = currentTile.transform.position;
         }
+        ResetHighlights();
         ChangeState(State.playerSelectTurnAction);
     }
 
@@ -208,6 +251,21 @@ public class PlayerUnit : Unit {
             currentTile = tempCurrentTile;
             currentTile.GetComponent<Tile>().currentUnit = gameObject;
             GameManager.instance.moveButton.interactable = false;
+            ChangeState(State.playerSelectTurnAction);
+        }
+        else if (currentState == State.playerConfirmTarget) {
+            if (validTargetHovered) {
+                GameManager.instance.HandleAction(this, lastHoveredUnit.GetComponent<Unit>(), activeAbility);
+            }
+            else if (validAreaHovered) {
+                foreach (Tile tile in lastHoveredEffectTiles) {
+                    if (tile.currentUnit != null && !tile.currentUnit.GetComponent<Unit>().isDead) {
+                        GameManager.instance.HandleAction(this, tile.currentUnit.GetComponent<Unit>(), activeAbility);
+                    }
+                }
+            }
+            ResetHighlights();
+            GameManager.instance.actButton.interactable = false;
             ChangeState(State.playerSelectTurnAction);
         }
     }

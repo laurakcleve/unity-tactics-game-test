@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 135780231728185838}
   - component: {fileID: 23196108817700492}
   - component: {fileID: 114985716565680494}
-  - component: {fileID: 114174678586871254}
+  - component: {fileID: 114218942081792608}
   m_Layer: 0
   m_Name: PlayerUnit2
   m_TagString: PlayerUnit
@@ -151,7 +151,7 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114174678586871254
+--- !u!114 &114218942081792608
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -159,12 +159,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1079681573681512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbbe2bb541ca5aa4397cdc079d7c58e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 36ee239cb2ea22b458c6d2a37520fda6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   abilities:
-  - {fileID: 11400000, guid: 8865fac793263fc4db834916e5241f80, type: 2}
-  - {fileID: 11400000, guid: e62368526e9014f47aef8acc806387eb, type: 2}
+  - {fileID: 11400000, guid: fabe4327a83288248b4c6dcc4786aeab, type: 2}
+  - {fileID: 11400000, guid: 292c1c1a7aae81a4d80b66129dd09a26, type: 2}
 --- !u!114 &114985716565680494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,15 +177,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingX: 5
-  startingZ: 0
+  startingZ: 7
   moveRange: 4
   currentTile: {fileID: 0}
   tempCurrentTile: {fileID: 0}
   validMoves: []
   validAbilityTargets: []
   activeAbility: {fileID: 0}
-  originalMat: {fileID: 2100000, guid: eabf836eae2b689448e3cb424211f874, type: 2}
-  highlightMat: {fileID: 0}
+  defaultMat: {fileID: 2100000, guid: eabf836eae2b689448e3cb424211f874, type: 2}
+  highlightMat: {fileID: 2100000, guid: 8db7460da7256614cbcb5ca1a04035fe, type: 2}
+  deadMat: {fileID: 2100000, guid: 2d675203290bfd548b255a33dd6faca6, type: 2}
+  maxHealth: 8
+  currentHealth: 0
+  turnPosition: 0
+  isDead: 0
   abilityButtonPrefab: {fileID: 1259443314490868, guid: 1a0309c89e3b47349ad3dc11abe05671,
     type: 2}
 --- !u!135 &135780231728185838

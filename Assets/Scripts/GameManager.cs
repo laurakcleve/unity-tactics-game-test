@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance = null;
 	public GameObject tilePrefab;
 	public GameObject[] unitPrefabs;
-	public GameObject[] units;
+	public List<GameObject> units;
 	public GameObject turnCanvas;
 	public GameObject abilitiesCanvas;
 	public Button moveButton;
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
 
 	void CreateUnits() {
 
-		units = new GameObject[unitPrefabs.Length];
+		units = new List<GameObject>();
 
 		for (int i = 0; i < unitPrefabs.Length; i++) {
 			Unit unitScript = unitPrefabs[i].GetComponent<Unit>();
@@ -88,13 +88,34 @@ public class GameManager : MonoBehaviour {
 			) as GameObject;
 			unitInstance.GetComponent<Unit>().currentTile = tile;
 			tile.GetComponent<Tile>().currentUnit = unitInstance;
-			units[i] = unitInstance;
+			unitInstance.GetComponent<Unit>().turnPosition = i;
+			units.Add(unitInstance);
 		}
 	}
 
 	public void PassTurn() {
-		activeUnit = (activeUnit + 1) % units.Length;
+		activeUnit = (activeUnit + 1) % units.Count;
 		units[activeUnit].GetComponent<Unit>().TakeTurn();
+	}
+
+	public void HandleAction(Unit actor, Unit target, Ability ability) {
+		Debug.Log(actor.gameObject.name + " using " + ability.name + " on " + target.gameObject.name);
+		target.TakeDamage(ability.damage);
+	}
+
+	public void RemoveUnit(int position) {
+		// Debug.Log("Units before removal:");
+		// foreach(GameObject unit in units) {
+		// 	Debug.Log(unit.name);
+		// }
+		units.RemoveAt(position);
+		for (int i = 0; i < units.Count; i++) {
+			units[i].GetComponent<Unit>().turnPosition = i;
+		}
+		// Debug.Log("Units after removal:");
+        // foreach (GameObject unit in units) {
+        //     Debug.Log(unit.name);
+        // }
 	}
 
 }
