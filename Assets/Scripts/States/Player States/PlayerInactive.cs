@@ -13,7 +13,7 @@ public class PlayerInactive : State {
         GameManager.instance.confirmButton.onClick.RemoveAllListeners();
         GameManager.instance.endTurnButton.onClick.RemoveAllListeners();
 
-		unit.DepopulateAbilities();
+		unit.Turn.DepopulateAbilities();
 
         unit.gameObject.transform.Find("Spotlight").gameObject.SetActive(false);
 	}
@@ -21,13 +21,13 @@ public class PlayerInactive : State {
 	public override void Exit(PlayerUnit unit) {
         // unit.LogState("PlayerInactive", "EXIT");
 
-		GameManager.instance.moveButton.onClick.AddListener(unit.ClickMove);
-		GameManager.instance.actButton.onClick.AddListener(unit.ClickAct);
-		GameManager.instance.cancelButton.onClick.AddListener(unit.Cancel);
-		GameManager.instance.confirmButton.onClick.AddListener(unit.Confirm);
+		GameManager.instance.moveButton.onClick.AddListener(delegate { unit.Turn.ClickMove(unit); });
+		GameManager.instance.actButton.onClick.AddListener(delegate { unit.Turn.ClickAct(unit); });
+		GameManager.instance.cancelButton.onClick.AddListener(delegate { unit.Turn.Cancel(unit); });
+		GameManager.instance.confirmButton.onClick.AddListener(delegate { unit.Turn.Confirm(unit); });
 		GameManager.instance.endTurnButton.onClick.AddListener(unit.EndTurn);
 
-		unit.PopulateAbilities();
+		unit.Turn.PopulateAbilities(unit);
 
 		unit.gameObject.transform.Find("Spotlight").gameObject.SetActive(true);
 

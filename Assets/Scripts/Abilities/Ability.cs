@@ -29,5 +29,5 @@ public class Ability : ScriptableObject {
 }
 
 public enum TargetType {
-    Self, Ally, Enemy, Any
+    Self, Ally, Enemy, Area, AreaNotSelf
 }

@@ -10,7 +10,8 @@ public class PlayerConfirmTarget : State {
         GameManager.instance.cancelButton.gameObject.SetActive(true);
         GameManager.instance.confirmButton.gameObject.SetActive(true);
 
-        unit.HighlightEffectTiles();
+        if (unit.Turn.lastHoveredEffectTiles != null)
+            unit.Turn.EnableTileHighlights(unit.Turn.lastHoveredEffectTiles);
     }
 
     public override void Exit(PlayerUnit unit) {

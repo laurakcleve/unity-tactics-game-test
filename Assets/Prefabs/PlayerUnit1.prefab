@@ -176,21 +176,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d4b1a2e816c2449a747c589477d3b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingX: 3
-  startingZ: 7
+  startingX: 1
+  startingZ: 5
   moveRange: 4
-  currentTile: {fileID: 0}
-  tempCurrentTile: {fileID: 0}
-  validMoves: []
-  validAbilityTargets: []
-  activeAbility: {fileID: 0}
-  defaultMat: {fileID: 2100000, guid: eabf836eae2b689448e3cb424211f874, type: 2}
-  highlightMat: {fileID: 2100000, guid: 8db7460da7256614cbcb5ca1a04035fe, type: 2}
-  deadMat: {fileID: 2100000, guid: 2d675203290bfd548b255a33dd6faca6, type: 2}
-  maxHealth: 12
+  maxHealth: 8
   currentHealth: 0
   turnPosition: 0
   isDead: 0
+  currentTile: {fileID: 0}
+  defaultMat: {fileID: 2100000, guid: eabf836eae2b689448e3cb424211f874, type: 2}
+  highlightMat: {fileID: 2100000, guid: 8db7460da7256614cbcb5ca1a04035fe, type: 2}
+  deadMat: {fileID: 2100000, guid: 2d675203290bfd548b255a33dd6faca6, type: 2}
   abilityButtonPrefab: {fileID: 1259443314490868, guid: 1a0309c89e3b47349ad3dc11abe05671,
     type: 2}
 --- !u!135 &135315995610515432

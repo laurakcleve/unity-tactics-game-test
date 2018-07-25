@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 64774154996853876}
   - component: {fileID: 23284997634753576}
   - component: {fileID: 114443116950861028}
+  - component: {fileID: 114764780963353352}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Tile
@@ -111,9 +112,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   z: 0
-  tileMat: {fileID: 2100000, guid: ed86ba3ecc94c9543b02edd6e00876cd, type: 2}
-  tileHighlightMat: {fileID: 2100000, guid: b1bc76d0825345f449a9a6e905c4d46b, type: 2}
-  tileValidMat: {fileID: 2100000, guid: f10a9b149f43fae418fb444ca2105bf2, type: 2}
-  previousMaterial: {fileID: 0}
+  defaultMat: {fileID: 2100000, guid: ed86ba3ecc94c9543b02edd6e00876cd, type: 2}
+  validMat: {fileID: 2100000, guid: f10a9b149f43fae418fb444ca2105bf2, type: 2}
+  highlightMat: {fileID: 2100000, guid: b1bc76d0825345f449a9a6e905c4d46b, type: 2}
   connected: []
   effectTiles: []
+  currentUnit: {fileID: 0}
+--- !u!114 &114764780963353352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1138358128439176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0d2b53d6ee00645864bb8d48ce5796, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

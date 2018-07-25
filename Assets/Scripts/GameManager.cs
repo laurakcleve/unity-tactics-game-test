@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance = null;
 	public GameObject tilePrefab;
 	public GameObject[] unitPrefabs;
-	public List<GameObject> units;
 	public GameObject turnCanvas;
 	public GameObject abilitiesCanvas;
 	public Button moveButton;
@@ -18,7 +17,8 @@ public class GameManager : MonoBehaviour {
 	public Button endTurnButton;
 	public int activeUnit = 0;
 
-	public GameObject[,] tiles;
+	public List<Unit> units;
+	public Tile[,] tiles;
 
 
 	void Awake() {
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
             Destroy(this);
         }
 
-		tiles = CreateTiles();
+		CreateTiles();
 		CreateUnits();
 	}
 
@@ -37,9 +37,8 @@ public class GameManager : MonoBehaviour {
 		units[activeUnit].GetComponent<Unit>().TakeTurn();
 	}
 
-	GameObject[,] CreateTiles() {
-
-		GameObject[,] tempTiles = new GameObject[10,10];
+	void CreateTiles() {
+		tiles = new Tile[10,10];
 
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 10; x++) {
@@ -53,69 +52,64 @@ public class GameManager : MonoBehaviour {
 				tileScript.x = x;
 				tileScript.z = z;
 
-				tempTiles[x,z] = tileInstance;
+				tiles[x,z] = tileScript;
 			}
 		}
 
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 10; x++) {
-				List<GameObject> connectedTiles = tempTiles[z,x].GetComponent<Tile>().connected;
+				List<Tile> connectedTiles = tiles[z,x].connected;
                 if (z > 0)
-                    connectedTiles.Add(tempTiles[z - 1, x]);
+                    connectedTiles.Add(tiles[z - 1, x]);
                 if (x < 9)
-                    connectedTiles.Add(tempTiles[z, x + 1]);
+                    connectedTiles.Add(tiles[z, x + 1]);
                 if (z < 9)
-                    connectedTiles.Add(tempTiles[z + 1, x]);
+                    connectedTiles.Add(tiles[z + 1, x]);
                 if (x > 0)
-                    connectedTiles.Add(tempTiles[z, x - 1]);
+                    connectedTiles.Add(tiles[z, x - 1]);
 			}
 		}
 
-		return tempTiles;
 	}
 
 	void CreateUnits() {
-
-		units = new List<GameObject>();
+		units = new List<Unit>();
 
 		for (int i = 0; i < unitPrefabs.Length; i++) {
 			Unit unitScript = unitPrefabs[i].GetComponent<Unit>();
-			GameObject tile = tiles[unitScript.startingX, unitScript.startingZ];
+			Tile startingTile = tiles[unitScript.startingX, unitScript.startingZ];
 			GameObject unitInstance = Instantiate(
 				unitPrefabs[i],
-				tile.transform.position,
+				startingTile.transform.position,
 				Quaternion.identity
 			) as GameObject;
-			unitInstance.GetComponent<Unit>().currentTile = tile;
-			tile.GetComponent<Tile>().currentUnit = unitInstance;
-			unitInstance.GetComponent<Unit>().turnPosition = i;
-			units.Add(unitInstance);
+			Unit instanceUnitScript = unitInstance.GetComponent<Unit>();
+			instanceUnitScript.currentTile = startingTile;
+			startingTile.currentUnit = instanceUnitScript;
+			instanceUnitScript.turnPosition = i;
+			unitInstance.name = unitPrefabs[i].name;
+			units.Add(instanceUnitScript);
 		}
 	}
 
 	public void PassTurn() {
-		activeUnit = (activeUnit + 1) % units.Count;
-		units[activeUnit].GetComponent<Unit>().TakeTurn();
+		activeUnit++;
+		if (activeUnit >= units.Count) {
+			activeUnit = 0;
+		}
+		units[activeUnit].TakeTurn();
 	}
 
 	public void HandleAction(Unit actor, Unit target, Ability ability) {
-		Debug.Log(actor.gameObject.name + " using " + ability.name + " on " + target.gameObject.name);
+		Debug.Log(actor.name + " using " + ability.name + " on " + target.name);
 		target.TakeDamage(ability.damage);
 	}
 
 	public void RemoveUnit(int position) {
-		// Debug.Log("Units before removal:");
-		// foreach(GameObject unit in units) {
-		// 	Debug.Log(unit.name);
-		// }
 		units.RemoveAt(position);
 		for (int i = 0; i < units.Count; i++) {
-			units[i].GetComponent<Unit>().turnPosition = i;
+			units[i].turnPosition = i;
 		}
-		// Debug.Log("Units after removal:");
-        // foreach (GameObject unit in units) {
-        //     Debug.Log(unit.name);
-        // }
 	}
 
 }

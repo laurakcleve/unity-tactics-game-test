@@ -14,7 +14,7 @@ MonoBehaviour:
   name: Cleave
   damage: 5
   range: 1
-  targetType: 3
+  targetType: 4
   effectTiles:
   - -1,0
   - 0,0

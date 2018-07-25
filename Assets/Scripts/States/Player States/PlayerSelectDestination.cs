@@ -9,8 +9,8 @@ public class PlayerSelectDestination : State {
 
         GameManager.instance.cancelButton.gameObject.SetActive(true);
 
-		unit.validMoves = unit.GetValidMoveTiles(unit.currentTile, unit.moveRange);
-		unit.ShowTiles(unit.validMoves);
+		unit.Turn.GetValidMoveTiles(unit.currentTile, unit.moveRange);
+		unit.Turn.ShowTiles(unit.Turn.ValidMoveTiles);
     }
 
     public override void Exit(PlayerUnit unit) {
@@ -18,7 +18,7 @@ public class PlayerSelectDestination : State {
 
         GameManager.instance.cancelButton.gameObject.SetActive(false);
 
-        unit.HideTiles(unit.validMoves);
+        unit.Turn.HideTiles(unit.Turn.ValidMoveTiles);
     }
 
 }
