@@ -165,6 +165,7 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: fabe4327a83288248b4c6dcc4786aeab, type: 2}
   - {fileID: 11400000, guid: 292c1c1a7aae81a4d80b66129dd09a26, type: 2}
+  - {fileID: 11400000, guid: b8e643a3e6d4d574b8fbd1a7f070ec2a, type: 2}
 --- !u!114 &114985716565680494
 MonoBehaviour:
   m_ObjectHideFlags: 1

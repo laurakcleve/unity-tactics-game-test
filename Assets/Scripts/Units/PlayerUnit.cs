@@ -18,8 +18,11 @@ public class PlayerUnit : Unit {
     }
 
     void Update() {
-        if (currentState == State.playerSelectDestination || currentState == State.playerSelectTarget) {
-            Turn.Mouseover(this);
+        if (currentState == State.playerSelectDestination) {
+            Turn.MouseoverDestination(this);
+        }
+        else if (currentState == State.playerSelectTarget) {
+            Turn.MouseoverTarget(this);
         }
     }
 

@@ -8,6 +8,7 @@ public class Ability : ScriptableObject {
 
 	public new string name;
 	public int damage;
+	public int healing;
 	public int range;
 	public TargetType targetType;
 

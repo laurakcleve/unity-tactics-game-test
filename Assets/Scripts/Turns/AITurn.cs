@@ -8,6 +8,8 @@ public class AITurn : Turn {
     private Ability chosenAbility;
     private bool hasActed;
 
+    private bool verbose = false;
+
     public override void AITakeTurn(AIUnit unit) {
         target = null;
         hasActed = false;
@@ -15,16 +17,20 @@ public class AITurn : Turn {
     }
 
     IEnumerator TurnCoroutine(AIUnit unit) {
-        yield return new WaitForSeconds(.5f);
+
+        if (verbose)
+            yield return new WaitForSeconds(.5f);
 
         yield return StartCoroutine(AttackEnemyInRange(unit));
 
-        yield return new WaitForSeconds(.5f);
+        if (verbose)
+            yield return new WaitForSeconds(.5f);
 
         if (!hasActed) {
             Debug.Log("Moving to nearest enemy");
             MoveToNearestEnemy(unit);
-            yield return new WaitForSeconds(1f);
+            if (verbose) 
+                yield return new WaitForSeconds(1f);
             yield return StartCoroutine(AttackEnemyInRange(unit));
         }
 
@@ -38,7 +44,8 @@ public class AITurn : Turn {
             Debug.Log("Checking ability " + ability.name);
             GetValidTargetTiles(unit.currentTile, ability);
             ShowTiles(ValidAbilityTargets);
-            yield return new WaitForSeconds(1f);
+            if (verbose)
+                yield return new WaitForSeconds(1f);
 
             foreach (Tile tile in ValidAbilityTargets) {
                 if (ability.targetType == TargetType.Area || ability.targetType == TargetType.AreaNotSelf) {
@@ -54,7 +61,8 @@ public class AITurn : Turn {
                         }
                     }
 
-                    yield return new WaitForSeconds(.5f);
+                    if (verbose)
+                        yield return new WaitForSeconds(.5f);
                     DisableTileHighlights(currentEffectTiles);
                 }
                 if (target != null) break;
@@ -63,7 +71,8 @@ public class AITurn : Turn {
                     tile.currentUnit.EnableHighlight();
                     Debug.Log("Found enemy at " + tile.x + ", " + tile.z);
                     target = tile.currentUnit;
-                    yield return new WaitForSeconds(.5f);
+                    if (verbose)
+                        yield return new WaitForSeconds(.5f);
                     tile.currentUnit.DisableHighlight();
                     chosenAbility = ability;
                     break;
@@ -77,7 +86,8 @@ public class AITurn : Turn {
         if (target != null) {
             GameManager.instance.HandleAction(unit, target, chosenAbility);
             hasActed = true;
-            yield return new WaitForSeconds(1f);
+            if (verbose)
+                yield return new WaitForSeconds(1f);
         }
     }
 

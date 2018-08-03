@@ -14,7 +14,8 @@ public abstract class Turn : MonoBehaviour {
     public List<Tile> ValidMoveTiles { get; set; }
     public List<Tile> ValidAbilityTargets { get; set; }
 
-    public virtual void Mouseover(PlayerUnit unit) {}
+    public virtual void MouseoverDestination(PlayerUnit unit) {}
+    public virtual void MouseoverTarget(PlayerUnit unit) {}
     public virtual void ClickMove(PlayerUnit unit) {}
     public virtual void ClickAct(PlayerUnit unit) {}
     public virtual void ClickAbility(Ability ability, PlayerUnit unit) {}

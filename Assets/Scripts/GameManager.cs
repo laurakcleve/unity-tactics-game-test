@@ -102,7 +102,10 @@ public class GameManager : MonoBehaviour {
 
 	public void HandleAction(Unit actor, Unit target, Ability ability) {
 		Debug.Log(actor.name + " using " + ability.name + " on " + target.name);
-		target.TakeDamage(ability.damage);
+		if (ability.damage > 0)
+			target.LoseHP(ability.damage);
+		if (ability.healing > 0)
+			target.GainHP(ability.healing);
 	}
 
 	public void RemoveUnit(int position) {
