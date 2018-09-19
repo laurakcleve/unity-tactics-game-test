@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject[] unitPrefabs;
 	public GameObject turnCanvas;
 	public GameObject abilitiesCanvas;
+	public GameObject logWindow;
+	public GameObject logTextPrefab;
 	public Button moveButton;
 	public Button actButton;
 	public Button cancelButton;
@@ -101,7 +103,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void HandleAction(Unit actor, Unit target, Ability ability) {
-		Debug.Log(actor.name + " using " + ability.name + " on " + target.name);
+		string message = $"{actor.name} using {ability.name} on {target.name}";
+		GameManager.instance.AddMessageToLog(message);
+		Debug.Log(message);
 		if (ability.damage > 0)
 			target.LoseHP(ability.damage);
 		if (ability.healing > 0)
@@ -113,6 +117,18 @@ public class GameManager : MonoBehaviour {
 		for (int i = 0; i < units.Count; i++) {
 			units[i].turnPosition = i;
 		}
+	}
+
+	public void AddMessageToLog(string message) {
+		GameObject logTextInstance = Instantiate(
+			logTextPrefab,
+			logWindow.transform.position,
+			Quaternion.identity
+		) as GameObject;
+		logTextInstance.GetComponent<Text>().text = message;
+		logTextInstance.transform.SetParent(logWindow.transform, false);
+
+		Debug.Log(message);
 	}
 
 }

@@ -12,6 +12,7 @@ public class AIUnit : Unit {
 
 	public override void TakeTurn() {
         Debug.Log(gameObject.name + " taking turn");
+        GameManager.instance.AddMessageToLog(gameObject.name + " beginning turn");
         gameObject.transform.Find("Spotlight").gameObject.SetActive(true);
         Turn.AITakeTurn(this);
     }

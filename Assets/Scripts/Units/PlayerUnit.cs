@@ -39,6 +39,7 @@ public class PlayerUnit : Unit {
     public override void TakeTurn() {
 
         Debug.Log(gameObject.name + " beginning turn");
+        GameManager.instance.AddMessageToLog(gameObject.name + " beginning turn");
 
         ChangeState(State.playerSelectTurnAction);
     }

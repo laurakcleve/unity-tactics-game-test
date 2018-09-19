@@ -47,12 +47,12 @@ public abstract class Unit : MonoBehaviour {
 
     public void LoseHP(int amount) {
         currentHealth -= amount;
-        Debug.Log(gameObject.name + " takes " + amount + " points of damage");
+        GameManager.instance.AddMessageToLog($"{gameObject.name} takes {amount} points of damage");
         if (currentHealth <= 0) {
             currentHealth = 0;
             Die();
         }
-        Debug.Log(gameObject.name + " current health: " + currentHealth);
+        GameManager.instance.AddMessageToLog($"{gameObject.name} current health: {currentHealth}");
     }
 
     public void GainHP(int amount) {
@@ -60,18 +60,19 @@ public abstract class Unit : MonoBehaviour {
         if (currentHealth + amount > maxHealth) {
             healAmount = maxHealth - currentHealth;
             overhealAmount = currentHealth + amount - maxHealth;
-            Debug.Log(gameObject.name + " gains " + healAmount + " health points (" + overhealAmount + " overheal)");
+            GameManager.instance.AddMessageToLog($"{gameObject.name} gains {healAmount}  health points ({overhealAmount} overheal)");
         }
         else {
             healAmount = amount;
             overhealAmount = 0;
-            Debug.Log(gameObject.name + " gains " + healAmount + " health points");
+            GameManager.instance.AddMessageToLog($"{gameObject.name} gains {healAmount} health points");
         }
         currentHealth += healAmount;
+        GameManager.instance.AddMessageToLog($"{gameObject.name} current health: {currentHealth}");
     }
 
     private void Die() {
-        Debug.Log(gameObject.name + " is dead");
+        GameManager.instance.AddMessageToLog($"{gameObject.name} is dead");
         isDead = true;
         thisRenderer.material = deadMat;
         GameManager.instance.RemoveUnit(turnPosition);
