@@ -8,7 +8,7 @@ public class AITurn : Turn {
     private Ability chosenAbility;
     private bool hasActed;
 
-    private bool verbose = false;
+    private bool verbose = true;
 
     public override void AITakeTurn(AIUnit unit) {
         target = null;
